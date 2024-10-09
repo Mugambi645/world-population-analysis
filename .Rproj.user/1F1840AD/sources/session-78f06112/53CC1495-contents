@@ -1,6 +1,8 @@
 ---
 title: "Untitled"
-output: html_document
+output:
+  html_document: default
+  pdf_document: default
 date: "2024-09-25"
 ---
 
@@ -8,24 +10,72 @@ date: "2024-09-25"
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## R Markdown
+## World Population Analysis
+Comprehensive World Population EDA 
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+```{r list:files}
+list.files(path = "archive")
 ```
-```{r print}
-2 + 2
+```{r libraries}
+library(skimr)
+library(janitor)
+library(ggplot2)
+library(reshape2)
+library(ggpie)
+library(plotrix)
+library(gridExtra)
+#library(tidyverse)
+#install.packages("dplyr")
+library(dplyr)
 ```
-## Including Plots
+## Importing the dataset
 
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r dataset, echo=FALSE}
+world_pop <- read.csv("./archive/world_population.csv")
+colnames(world_pop)
+```
+```{r}
+#renaming the column names for the dataset
+colnames(world_pop)[6] <- "population_2022"
+colnames(world_pop)[7] <- "population_2020"
+colnames(world_pop)[8] <- "population_2015"
+colnames(world_pop)[9] <- "population_2010"
+colnames(world_pop)[10] <- "population_2000"
+colnames(world_pop)[11] <- "population_1990"
+colnames(world_pop)[12] <- "population_1980"
+colnames(world_pop)[13] <- "population_1970"
+colnames(world_pop)[14] <- "square_area"
+colnames(world_pop)[15] <- "pop_density"
+colnames(world_pop)[16] <- "growth_rate"
+colnames(world_pop)[17] <- "world_pop_percent"
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+```{r}
+#checking the column names
+#checking the dataset's summary
+colnames(world_pop)
+sum(is.na(world_pop))
+str(world_pop)
+```
+There are no missing values in this data set and the column names have been changed as well.
+
+
+## Visualizing The Number of Countries Per Continent
+
+```{r}
+#number of countries per continent
+country_count <- world_pop %>% 
+  group_by(Continent) %>%
+  summarise(Count = n())
+countries_per_continent <-ggplot(country_count, aes(x=Continent, y=Count, fill = Continent)) + geom_col(position = "dodge") +
+  geom_text(aes(label= Count), vjust=0, size=3) +
+  labs(x= 'Continent', y = 'Countries Count', title = 'Countries per Continent')+
+  theme(axis.text.x = element_text(angle = 45))
+countries_per_continent
+```
+- Africa has the most number of countries and South America has the least amount of countries
+
+# Total Population by Year by Continent¶
+
+
+
