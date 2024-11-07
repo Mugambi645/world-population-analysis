@@ -76,6 +76,12 @@ countries_per_continent
 - Africa has the most number of countries and South America has the least amount of countries
 
 # Total Population by Year by Continent¶
+```{r}
+#Year 2022
+pop_2022 <- world_pop %>% 
+  group_by(Continent) %>% 
+  summarise(total_pop = sum(population_2022)) %>%
+  arrange(desc(total_pop))
 
-
+```
 
