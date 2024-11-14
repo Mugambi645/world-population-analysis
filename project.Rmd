@@ -64,7 +64,7 @@ str(world_pop)
 
 There are no missing values in this data set and the column names have been changed as well.
 
-## Visualizing The Number of Countries Per Continent
+### Visualizing The Number of Countries Per Continent
 
 ```{r}
 #number of countries per continent
@@ -80,7 +80,9 @@ countries_per_continent
 
 -   Africa has the most number of countries and South America has the least amount of countries
 
-Year 2022 \# Total Population by Year by Continent¶
+Total Population by Year by Continent¶
+
+Year 2022
 
 ```{r}
 pop_2022 <- world_pop %>%
@@ -148,7 +150,7 @@ pop2010 <- ggplot(pop_2010, aes(x=Continent, y=total_pop, fill = Continent)) + g
 pop2010
 ```
 
-Year 2000
+### Year 2000
 
 ```{r}
 # 2000
@@ -165,3 +167,82 @@ print(pop_2000)
 ```
 
 -   For the year 2000, the population for Africa exceeded that of Europe as it continues in its growth rate keeps rising compared to that of Europe, Asia still has the highest population.
+
+### Total Population Trend by Continent
+
+Perfoming data Manipulation \`{r}
+
+```{r}
+# Total population trend by continent
+# Performing some data manipulation to create a new table to place the continents as columns and the total population as rows
+pop_combined <- world_pop %>% 
+  group_by(Continent) %>% 
+  summarise(total_pop_2022 = sum(population_2022), total_pop_2020 = sum(population_2020),
+            total_pop_2015 = sum(population_2015), total_pop_2010 = sum(population_2010),
+            total_pop_2000 = sum(population_2000), total_pop_1990 = sum(population_1990),
+            total_pop_1980 = sum(population_1980), total_pop_1970 = sum(population_1970)) 
+
+pop_combined <- t(select(pop_combined, "total_pop_2022", "total_pop_2020", "total_pop_2015", "total_pop_2010",
+       "total_pop_2000", "total_pop_1990", "total_pop_1980", "total_pop_1970"))
+```
+
+\`
+
+```{r}
+colnames(pop_combined) <- c("Africa", "Asia", "Europe", "North_America", "Oceania", "South_America")
+pop_coombined_new <- cbind(Years = rownames(pop_combined), pop_combined)
+rownames(pop_coombined_new)<- 1:nrow(pop_coombined_new)
+colnames(pop_coombined_new) <- c("Years","Africa", "Asia", "Europe", "North_America", "Oceania", "South_America")
+pop_coombined_new <- as.data.frame(pop_coombined_new)
+```
+
+```{r}
+# Total population trend by continent
+# Africa
+Africa <- ggplot(pop_coombined_new, aes(x=Years, y=reorder(Years,Africa), fill = Years)) + geom_col(position = "dodge") +
+  geom_text(aes(label= Africa), vjust=0, size=3) +
+  labs(x= 'Years', y = 'Africa', title = 'Total Population Trend for Africa')+
+  theme(axis.text.x = element_text(angle = 45))
+
+# Asia
+Asia <-ggplot(pop_coombined_new, aes(x=Years, y=Asia, fill = Years)) + geom_col(position = "dodge") +
+  geom_text(aes(label= Asia), vjust=0, size=3) +
+  labs(x= 'Years', y = 'Asia', title = 'Total Population Trend for Asia')+
+  theme(axis.text.x = element_text(angle = 45))
+
+# Europe
+Europe <-ggplot(pop_coombined_new, aes(x=Years, y=Europe, fill = Years)) + geom_col(position = "dodge") +
+  geom_text(aes(label= Europe), vjust=0, size=3) +
+  labs(x= 'Years', y = 'Europe', title = 'Total Population Trend for Europe')+
+  theme(axis.text.x = element_text(angle = 45))
+
+# North America
+North_America <-ggplot(pop_coombined_new, aes(x=Years, y=North_America, fill = Years)) + geom_col(position = "dodge") +
+  geom_text(aes(label= North_America), vjust=0, size=3) +
+  labs(x= 'Years', y = 'North America', title = 'Total Population Trend for North America')+
+  theme(axis.text.x = element_text(angle = 45))
+
+# Oceania
+Oceania <- ggplot(pop_coombined_new, aes(x=Years, y=Oceania, fill = Years)) + geom_col(position = "dodge") +
+  geom_text(aes(label= Oceania), vjust=0, size=3) +
+  labs(x= 'Years', y = 'Oceania', title = 'Total Population Trend for Oceania')+
+  theme(axis.text.x = element_text(angle = 45))
+
+# South America
+South_America <- ggplot(pop_coombined_new, aes(x=Years, y=South_America, fill = Years)) + geom_col(position = "dodge") +
+  geom_text(aes(label= South_America), vjust=0, size=3) +
+  labs(x= 'Years', y = 'South America', title = 'Total Population Trend for South America')+
+  theme(axis.text.x = element_text(angle = 45))
+```
+
+-   All the continents over the years from 1970 through 2022 saw different levels of increases in their total population except Europe.
+
+-   Europe's population for the year 2022 saw a drop from the year 2020.
+
+-   Research to find out causes would be interesting, maybe more death rates than birth rates, covid, and so on.
+
+    ```{}
+    ```
+
+    ```{}
+    ```
